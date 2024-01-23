@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Facturation</title>
+  <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.css}">
+
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+	<div th:replace="fragments/navbar :: nav"></div>
+  <div class="container pt-3">
+	  <div class="card">
+		  <div class="card-header">
+			<div class="col">
+		  		<h1>Ajouter Facture</h1>
+	  		</div>
+		  </div>
+		  <div class="card-body">
+			  
+			<form th:action="@{/factures/ajout/ligneFacture}" method="post"></form> 
+			<form th:action="@{/factures/save}" method="post" th:object="${facture}">
+			  <div class="mb-3 pt-3">
+			      <label for="client" class="form-label">Client</label>
+			      <select  th:field="*{client}" >
+			        <option th:each="client : ${clients}" th:value="${client.id}">
+						[[${client.prenom}]] [[${client.nom}]]
+					</option>
+			      </select>
+			    </div>
+			    
+			    <div class="mb-3 " >
+			      <label for="ligneFactures" class="form-label">Produit</label>
+			      <select th:value="${produit}" >
+			        <option th:each="prod : ${produits}" th:value="produit.id">[[${prod.nom}]]</option>
+			      </select>&nbsp;
+			      <label for="quantite">Quantité</label>
+			      <input type="number" th:value="${quantite}" name="quantite">&nbsp;
+			      <button type="button" onclick="ajout()">
+					  <i class="fa-solid fa-check text-success"></i>
+			      </button>
+			    </div>
+			    
+			     <table class="table table-striped">
+
+	                  <thead>
+	                      <tr>
+	                        <th>Nom</th><th>Quantité</th>
+	                      </tr>
+	                    </thead>
+	                    <tbody>
+	                      <tr th:each="f : ${ligneFactures}">
+	
+	                          <td>{{f.produit.nom}}</td>
+	                          <td>{{f.quantite}}</td>
+	
+	                        </tr>
+	                    </tbody>
+	              </table>
+			    
+			    
+			  <button type="submit" class="btn btn-primary">Envoyer</button>
+			</form>
+		  </div>
+	  </div>  
+  
+  </div>
+  <script>
+	  function ajout(){
+		  window.location = "[[@{/factures/ajout/ligneFacture}]]"
+	  }
+  </script> 
+  <script th:src="@{/webjars/font-awesome/6.4.2/js/all.js}"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

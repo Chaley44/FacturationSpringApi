@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Firt App Srping</title>
+  <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.css}">
+
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+	<div th:replace="fragments/navbar :: nav"></div>
+  <div class="container pt-3">
+	  <div class="card">
+		  <div class="card-header">
+			<div class="col">
+		  		<h1>Modifier Client</h1>
+	  		</div>
+		  </div>
+		  <div class="card-body">
+			<form th:action="@{/clients/update/{id}(id=${client.id})}" method="post" th:object="${client}">
+			  <div class="mb-3">
+			    <label for="nom" class="form-label">Nom</label>
+			    <input type="text" class="form-control" th:field="*{nom}" placeholder="Nom">
+			    <p class="alert alert-danger" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></p>
+			  </div>
+			  <div class="mb-3">
+			    <label for="prenom" class="form-label">Prenom</label>
+			    <input type="text" class="form-control" th:field="*{prenom}" placeholder="prenom">
+			  </div>
+			  <div class="mb-3">
+			    <label for="codePostale" class="form-label">Code Postale</label>
+			    <input type="text" class="form-control" th:field="*{codePostale}" placeholder="code Postale">
+			  </div>
+			  <div class="mb-3">
+			    <label for="email" class="form-label">Eamil</label>
+			    <input type="email" class="form-control" th:field="*{email}" placeholder="namexemple@gmail.com">
+			  </div>
+			  <div class="mb-3">
+			    <label for="telephone" class="form-label">Telephone</label>
+			    <input type="text" class="form-control" th:field="*{telephone}" placeholder="+221">
+			  </div>
+			  
+			  <button type="submit" class="btn btn-primary">Envoyer</button>
+			</form>
+		  </div>
+	  </div>  
+  
+  </div>
+	 
+  <script th:src="@{/webjars/font-awesome/6.4.2/js/all.js}"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

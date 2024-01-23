@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Facturation</title>
+  <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.css}">
+
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+	
+	<div th:replace="fragments/navbar :: nav"></div>
+	
+	<div class="container pt-3">
+	  <div class="card">
+	      <div class="card-header">
+	          <h2 class="">Liste des clients</h2>
+	          <a class="btn btn-outline-primary float-end" th:href="@{/clients/ajout}">Nouveau<i class="fa-solid fa-circle-plus"></i></a>
+	          <form class="d-flex test"  role="search">
+	              <input class=" me-2 float-none" type="search" 
+	              placeholder="Search"  
+	              th:value="${keyword}" name="keyword">
+	              <button class="btn btn-outline-success" type="submit" >Search</button>&nbsp;
+	              <a class="btn btn-outline-primary" th:href="@{/clients/clear}">Clear</a>
+	            </form>
+	      </div>
+	
+	      <div class="card-body">
+	          <table class="table table-striped">
+	              <thead>
+	
+	                  <tr>
+	                    <th>#</th><th>Nom</th><th>Prenom</th><th>Code postale</th<th>Email</th><th>Telephone</th><th>Action</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <tr th:each="c : ${clients}">
+	                      <td>1</td>
+	                      <td>[[${c.nom}]]</td>
+	                      <td>[[${c.prenom}]]</td>
+	                      <td>[[${c.codePostale}]]</td>
+	                      <td>[[${c.email}]]</td>
+	                      <td>[[${c.telephone}]]</td>
+	
+	                      <td>
+	                          <a th:href="@{/clients/modifier/{id} (id=${c.id})}"><i class="fa-solid fa-pen text-primary "></i></a>&nbsp;
+              				  <a th:href="@{/clients/supprimer/{id} (id=${c.id})}" onclick="confirm('Voulez vous vreaiment supprimer?')"><i class="fa-solid fa-trash text-danger"></i></a>
+	                      </td>
+	                    </tr>
+	                </tbody>
+	          </table>
+	          
+	      </div>
+	  </div>
+	</div>
+
+	
+	<script>
+	  function clear(){
+		  window.location = "[[@{/clients/liste]}]]";
+	  }
+  </script>
+  <script th:src="@{/webjars/font-awesome/6.4.2/js/all.js}"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.js}"></script>
+</body>
+
+</html>

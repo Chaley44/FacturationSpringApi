@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Facturation</title>
+  <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.css}">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+	
+	<div th:replace="fragments/navbar :: nav"></div>
+	
+	<div class="container pt-3">
+	  <div class="card">
+	      <div class="card-header">
+	          <h1>Listes des produits</h1>
+	          <a class="btn btn-outline-primary float-end" th:href="@{/produits/ajout}">Nouveau&nbsp;<i class="fa-solid fa-circle-plus"></i></a>
+	          <form class="d-flex test" role="search">
+	              <input class="form-control me-2" type="search" 
+	              placeholder="Search" 
+	              th:value="${keyword}" name="keyword">
+	              <button class="btn btn-outline-success" type="submit" >Rechercher</button>&nbsp;
+	              <a class="btn btn-outline-secondary" th:href="@{/produits/clear}">Effacer</a>&nbsp;
+	            </form>
+	      </div>
+	
+	      <div class="card-body">
+	          <table class="table table-striped">
+	              <thead>
+	
+	                  <tr>
+	                    <th>#</th><th>Nom</th><th>Description</th><th>Prix Unitaire</th><th>Action</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <tr  th:each="p : ${produits}">
+	                      <td>[[${pStat.index}+1]]</td>
+	                      <td>[[${p.nom}]]</td>
+	                      <td>[[${p.description}]]</td>
+	                      <td>[[${p.prixUnitaire}]]</td>
+	
+	                      <td>
+	                          <a th:href="@{/produits/modifier/{id} (id=${p.id})}"><i class="fa-solid fa-pen text-primary "></i></a>&nbsp;
+              				  <a th:href="@{/produits/supprimer/{id} (id=${p.id})}" onclick="confirm('Voulez vous vreaiment supprimer?')"><i class="fa-solid fa-trash text-danger"></i></a>
+	                      </td>
+	                    </tr>
+	                </tbody>
+	          </table>
+	          <div>
+				  <nav aria-label= "Navigation">
+						<ul class="pagination justify-content-center flex-wrap">
+							<li th:classappend="${pageCourante > 1 ? 'page-item': 'page-item disabled'}" >
+								<a class="page-link" aria-label="Previous" th:if="${pageCourante > 1}"
+								   th:href="@{'/produits/liste/page/' + ${pageCourante -1}}"
+								   th:text="'&laquo;'"></a>
+								<span aria-hidden="true" th:unless="${pageCourante > 1}"></span>
+
+							</li>
+							<th:block th:if="${totalPages <= 10}">
+								<li th:each="i : ${#numbers.sequence(1, totalPages)}"
+									th:class="${pageCourante != i ? 'page-item': 'page-item active'}">
+									<a th:href="@{'/produits/liste/page/' + ${i}}" class="page-link">[[${i}]]</a>
+								</li>
+							</th:block>
+							<th:block th:if="${totalPages > 10}">
+								<th:block th:if="${pageCourante <= 5 || pageCourante > page.getTotalPages() - 4 }">
+									<li th:each="i : ${#numbers.sequence(1, 5)}"
+										th:class="${pageCourante != i ? 'page-item': 'page-item active'}">
+										<a th:href="@{'/produits/liste/page/' + ${i}}" class="page-link">[[${i}]]</a>
+									</li>
+									<a th:href="@{'/produits/liste/page/' + 6}" class="page-link" th:text="${'...'}">...</a>
+									<li th:each="i : ${#numbers.sequence(page.getTotalPages() - 4, totalPages)}"
+										th:class="${pageCourante != i ? 'page-item': 'page-item active'}">
+										<a th:href="@{'/produits/liste/page/' + ${i}}" class="page-link">[[${i}]]</a>
+									</li>
+
+								</th:block>
+								<th:block th:if="${pageCourante > 5 && pageCourante < page.getTotalPages() - 4}">
+									<a th:href="@{'/produits/liste/page/' + ${page.getNumber() - 4}}" class="page-link" th:text="${'...'}">...</a>
+									<li th:each="i : ${#numbers.sequence(page.getNumber() - 4, page.getNumber() + 4)}"
+										th:class="${pageCourante != i ? 'page-item': 'page-item active'}">
+										<a th:href="@{'/produits/liste/page/' + ${i}}" class="page-link">[[${i}]]</a>
+									</li>
+
+									<a th:href="@{'/produits/liste/page/' + ${page.getNumber() + 5}}" class="page-link" th:text="${'...'}">...</a>
+								</th:block>
+							</th:block>
+							<li th:classappend="${pageCourante < totalPages ? 'page-item': 'page-item disabled'}">
+								<a class="page-link" aria-label="Next" th:if="${pageCourante < totalPages}"
+								   th:href="@{'/produits/liste/page/' + ${page.getNumber()  + 1}}"
+								   th:text="'&raquo;'">&raquo;</a>
+								<span aria-hidden="true" th:unless="${pageCourante < totalPages}"></span>
+							</li>
+							<li th:classappend="${pageCourante < totalPages ? 'page-item': 'page-item disabled'}">
+								<a class="page-link" th:if="${pageCourante < totalPages}"
+								   th:href="@{'/produits/liste/page/' + ${totalPages}}"
+								   th:text="Dernier">Dernier</a>
+								<span th:unless="${pageCourante < totalPages}"></span>
+							</li>
+						</ul>
+					</nav>
+			  </div>
+	          
+	          
+	      </div>
+	  </div>
+	</div>
+
+	
+	<script>
+	  function clear(){
+		  window.location = "[[@{/produits/clear}]]";
+	  }
+  </script>
+  <script th:src="@{/webjars/font-awesome/6.4.2/js/all.js}"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.js}"></script>
+</body>
+
+</html>
